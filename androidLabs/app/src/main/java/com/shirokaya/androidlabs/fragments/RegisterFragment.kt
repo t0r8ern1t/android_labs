@@ -1,29 +1,38 @@
-package com.shirokaya.androidlabs
+package com.shirokaya.androidlabs.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.navigation.fragment.NavHostFragment
+import com.shirokaya.androidlabs.ContentActivity
+import com.shirokaya.androidlabs.R
 
-class RegisterActivity : ComponentActivity() {
+class RegisterFragment : Fragment() {
+
     @SuppressLint("ResourceAsColor")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val root = inflater.inflate(R.layout.fragment_register, container, false)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
-
-        val byMailTextView = findViewById<TextView>(R.id.byEmailTitle)
-        val byPhoneTextView = findViewById<TextView>(R.id.byPhoneTitle)
-        val emailPhoneEditText = findViewById<EditText>(R.id.emailPhoneEditText)
-        val registerButton = findViewById<Button>(R.id.registerButton)
-        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
-        val repeatPasswordEditText = findViewById<EditText>(R.id.repeatPasswordEditText)
+        val byMailTextView = root.findViewById<TextView>(R.id.byEmailTitle)
+        val byPhoneTextView = root.findViewById<TextView>(R.id.byPhoneTitle)
+        val emailPhoneEditText = root.findViewById<EditText>(R.id.emailPhoneEditText)
+        val registerButton = root.findViewById<Button>(R.id.registerButton)
+        val passwordEditText = root.findViewById<EditText>(R.id.passwordEditText)
+        val repeatPasswordEditText = root.findViewById<EditText>(R.id.repeatPasswordEditText)
         var isEmail = true
 
         byMailTextView.setOnClickListener()
@@ -51,7 +60,7 @@ class RegisterActivity : ComponentActivity() {
             {
                 if (!emailPhoneEditText.text.toString().contains("@"))
                 {
-                    Toast.makeText(this, "Некорректный email", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Некорректный email", Toast.LENGTH_LONG).show()
                     isRegistratonCorrect = false
                 }
             }
@@ -59,7 +68,7 @@ class RegisterActivity : ComponentActivity() {
             {
                 if (!emailPhoneEditText.text.toString().contains("+"))
                 {
-                    Toast.makeText(this, "Некорректный номер телефона", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Некорректный номер телефона", Toast.LENGTH_LONG).show()
                     isRegistratonCorrect = false
                 }
             }
@@ -67,25 +76,27 @@ class RegisterActivity : ComponentActivity() {
             {
                 if (passwordEditText.text.toString().length < 6)
                 {
-                    Toast.makeText(this, "Пароль должен содержать не менее 6 символов", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Пароль должен содержать не менее 6 символов", Toast.LENGTH_LONG).show()
                     isRegistratonCorrect = false
                 }
             }
             else
             {
-                Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Пароли не совпадают", Toast.LENGTH_LONG).show()
                 isRegistratonCorrect = false
             }
 
             if (isRegistratonCorrect)
             {
-                val storage = getSharedPreferences("settings", Context.MODE_PRIVATE)
+                val storage = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
                 storage.edit().putString("emailPhone", emailPhoneEditText.text.toString()).apply()
                 storage.edit().putString("password", passwordEditText.text.toString()).apply()
 
-                val intent = Intent(this, ContentActivity::class.java)
-                startActivity(intent)
+                val navController = NavHostFragment.findNavController(this)
+                navController.navigate(R.id.oneFragment)
             }
         }
+
+        return root
     }
 }

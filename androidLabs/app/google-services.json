@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "615540875343",
+    "project_id": "phonerating-9968a",
+    "storage_bucket": "phonerating-9968a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615540875343:android:07c82facd1c0e1a36d0a3a",
+        "android_client_info": {
+          "package_name": "com.shirokaya.androidlabs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-fx01Jkk4maOL6QW_2Uh6DCN6K8r9YJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

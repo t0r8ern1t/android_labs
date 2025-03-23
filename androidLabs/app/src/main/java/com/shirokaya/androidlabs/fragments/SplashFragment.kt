@@ -12,12 +12,11 @@ import com.shirokaya.androidlabs.R
 
 class SplashFragment : Fragment() {
 
+    // можно вызвать чтобы попасть на страницу регистрации, если она уже пройдена
     fun removeData()
     {
-        val storage = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
-        storage.edit().putString("emailPhone", "0").apply()
-        storage.edit().putString("password", "0").apply()
-        storage.edit().putBoolean("rememberMe", false).apply()
+        val storage = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
+        storage.edit().putBoolean("isRegistered", false)
     }
 
     override fun onCreateView(
@@ -26,27 +25,19 @@ class SplashFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_splash, container, false)
 
-        removeData()
-
         val navController = NavHostFragment.findNavController(this)
-        val storage = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val storage = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
 
-        println(storage.getString("emailPhone", "0"))
-        println(storage.getString("password", "0"))
-        println(storage.getBoolean("rememberMe", false))
-        if (storage.getString("emailPhone", "0") != "0" && storage.getString("password", "0") != "0") {
+        if (storage.getBoolean("isRegistered", false)) {
             if (storage.getBoolean("rememberMe", false)) {
                 navController.navigate(R.id.oneFragment)
-                println("one")
             }
             else {
                 navController.navigate(R.id.loginFragment)
-                println("login")
             }
         }
         else {
             navController.navigate(R.id.registerFragment)
-            println("reg")
         }
         return root
     }

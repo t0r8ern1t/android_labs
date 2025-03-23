@@ -14,6 +14,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import com.shirokaya.androidlabs.ContentActivity
 import com.shirokaya.androidlabs.R
 
@@ -24,8 +26,8 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_register, container, false)
+        val navController = NavHostFragment.findNavController(this)
 
         val byMailTextView = root.findViewById<TextView>(R.id.byEmailTitle)
         val byPhoneTextView = root.findViewById<TextView>(R.id.byPhoneTitle)
@@ -39,7 +41,7 @@ class RegisterFragment : Fragment() {
         {
             byMailTextView.setTextColor(R.color.white)
             byPhoneTextView.setTextColor(R.color.black)
-            emailPhoneEditText.hint = "Email"
+            emailPhoneEditText.hint = "Электронная почта"
             emailPhoneEditText.inputType = InputType.TYPE_CLASS_TEXT
             isEmail = true
         }
@@ -88,12 +90,18 @@ class RegisterFragment : Fragment() {
 
             if (isRegistratonCorrect)
             {
-                val storage = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
-                storage.edit().putString("emailPhone", emailPhoneEditText.text.toString()).apply()
-                storage.edit().putString("password", passwordEditText.text.toString()).apply()
-
-                val navController = NavHostFragment.findNavController(this)
-                navController.navigate(R.id.oneFragment)
+                val storage = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
+                storage.edit().putBoolean("isRegistered", true)
+                val auth = FirebaseAuth.getInstance()
+                auth.createUserWithEmailAndPassword(emailPhoneEditText.text.toString(), passwordEditText.text.toString())
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful)
+                        {
+                            navController.navigate(R.id.oneFragment)
+                        }
+                    }.addOnFailureListener { exception ->
+                        Toast.makeText(requireContext(), exception.localizedMessage, Toast.LENGTH_LONG).show()
+                    }
             }
         }
 

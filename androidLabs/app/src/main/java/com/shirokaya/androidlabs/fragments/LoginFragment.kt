@@ -12,6 +12,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
+import com.google.firebase.auth.FirebaseAuth
 import com.shirokaya.androidlabs.ContentActivity
 import com.shirokaya.androidlabs.R
 
@@ -34,22 +35,22 @@ class LoginFragment : Fragment() {
             val emailPhone = emailPhoneEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            if (emailPhone.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
-            } else {
-                val storage =
-                    requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
-                if (storage.getBoolean("rememberMe", false)) {
-                    navController.navigate(R.id.oneFragment)
-                } else if (storage.getString("emailPhone", null) == emailPhone &&
-                        storage.getString("password", null) == password) {
-                    storage.edit().putBoolean("rememberMe", rememberMeCheckbox.isChecked).apply()
-                    navController.navigate(R.id.oneFragment)
-                } else {
-                    Toast.makeText(requireContext(),"Неправильный логин или пароль",
-                        Toast.LENGTH_LONG).show()
-                }
+            val auth = FirebaseAuth.getInstance()
+
+            val storage = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
+            if (storage.getBoolean("rememberMe", false)) {
+                navController.navigate(R.id.oneFragment)
             }
+            auth.signInWithEmailAndPassword(emailPhone, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful)
+                    {
+                        storage.edit().putBoolean("rememberMe", rememberMeCheckbox.isChecked).apply()
+                        navController.navigate(R.id.oneFragment)
+                    }
+                }.addOnFailureListener { exception ->
+                    Toast.makeText(requireContext(), exception.localizedMessage, Toast.LENGTH_LONG).show()
+                }
         }
         return root
     }

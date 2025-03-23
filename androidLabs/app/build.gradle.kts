@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -65,8 +66,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$2.5.3")
     implementation("androidx.navigation:navigation-ui:$2.5.3")
 
-    /*implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.fragment)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.navigation.ui)*/
+    implementation(platform("com.google.firebase:firebase-bom:31.5.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx:20.0.2")
 }

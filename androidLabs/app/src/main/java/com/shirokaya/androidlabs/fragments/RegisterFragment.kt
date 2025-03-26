@@ -39,21 +39,21 @@ class RegisterFragment : Fragment() {
 
         byMailTextView.setOnClickListener()
         {
-            byMailTextView.setTextColor(R.color.white)
-            byPhoneTextView.setTextColor(R.color.black)
+            /*byMailTextView.setTextColor(R.color.white)
+            byPhoneTextView.setTextColor(R.color.black)*/
             emailPhoneEditText.hint = "Электронная почта"
             emailPhoneEditText.inputType = InputType.TYPE_CLASS_TEXT
             isEmail = true
         }
 
-        byPhoneTextView.setOnClickListener()
+        /*byPhoneTextView.setOnClickListener()
         {
             byMailTextView.setTextColor(R.color.black)
             byPhoneTextView.setTextColor(R.color.white)
             emailPhoneEditText.hint = "Номер телефона"
             emailPhoneEditText.inputType = InputType.TYPE_CLASS_PHONE
             isEmail = false
-        }
+        }*/
 
         registerButton.setOnClickListener()
         {
@@ -88,10 +88,10 @@ class RegisterFragment : Fragment() {
                 isRegistratonCorrect = false
             }
 
-            if (isRegistratonCorrect)
+            if (isRegistratonCorrect && isEmail)
             {
                 val storage = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
-                storage.edit().putBoolean("isRegistered", true)
+                storage.edit().putBoolean("isRegistered", true).apply()
                 val auth = FirebaseAuth.getInstance()
                 auth.createUserWithEmailAndPassword(emailPhoneEditText.text.toString(), passwordEditText.text.toString())
                     .addOnCompleteListener { task ->

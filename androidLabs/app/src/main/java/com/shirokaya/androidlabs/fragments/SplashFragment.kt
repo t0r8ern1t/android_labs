@@ -12,11 +12,18 @@ import com.shirokaya.androidlabs.R
 
 class SplashFragment : Fragment() {
 
-    // можно вызвать чтобы попасть на страницу регистрации, если она уже пройдена
-    fun removeData()
+    fun checkOutLoginPage()
     {
         val storage = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
-        storage.edit().putBoolean("isRegistered", false)
+        storage.edit().putBoolean("rememberMe", false).apply()
+    }
+
+    // можно вызвать чтобы попасть на страницу регистрации, если она уже пройдена
+    fun checkOutRegisterPage()
+    {
+        checkOutLoginPage()
+        val storage = requireActivity().getSharedPreferences("data", Context.MODE_PRIVATE)
+        storage.edit().putBoolean("isRegistered", false).apply()
     }
 
     override fun onCreateView(
